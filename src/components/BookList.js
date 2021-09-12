@@ -63,55 +63,6 @@ const BookList = (props) => {
     }
   }
 
-  const generateExport = () => {
-    ExportService.generate(exportType, exportField)
-      .then((response) => {
-        setExportedId(response.data.content.data.id)
-        console.log('initialized')
-      })
-      .then(() => {
-        console.log('retrieving')
-        const timer = setTimeout(() => {
-          retrieveExport()
-        }, 5000)
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-
-    
-  }
-
-  const retrieveExport = () => {
-    console.log('called')
-    console.log(exportedId);
-
-    ExportService.retrieve(exportedId)
-      .then((response) => {
-        if (response.data.content.data.location) {
-          console.log(response.data.content.data.location)
-          setExportedUrl(response.data.content.data.location)
-          setExportedId(null)
-          const link = document.createElement('a');
-          link.href = exportedUrl;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-
-
-    // if (exportedUrl) {
-    //   console.log('window open')
-    //   window.open(exportedUrl, '_blank')
-    //   return () => clearTimeout(timer)
-    // }
-
-  }
-
   const columns = useMemo(
     () => [
       {

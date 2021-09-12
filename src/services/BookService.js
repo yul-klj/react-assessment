@@ -17,7 +17,7 @@ const update = (id, data) => {
 };
 
 const remove = (id) => {
-  return http.delete(`/tutorials/${id}`);
+  return http.delete(`/book/${id}`);
 };
 
 const search = (keyword) => {

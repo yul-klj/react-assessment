@@ -1,16 +1,10 @@
 import React, { useState, useEffect, useMemo, useRef } from "react"
 import BookDataService from "../services/BookService"
-import ExportService from "../services/ExportService"
 import { useTable, useSortBy, usePagination } from "react-table"
-import Select from 'react-select'
 
 const BookList = (props) => {
   const [books, setBooks] = useState([])
   const [searchKeyword, setSearchKeyword] = useState("")
-  const [exportType, setExportType] = useState("")
-  const [exportField, setExportField] = useState("")
-  const [exportedId, setExportedId] = useState("")
-  const [exportedUrl, setExportedUrl] = useState("")
   const bookRef = useRef()
 
   bookRef.current = books
@@ -22,14 +16,6 @@ const BookList = (props) => {
   const onChangeSearchKeyword = (e) => {
     const searchKeyword = e.target.value
     setSearchKeyword(searchKeyword)
-  }
-
-  const exportTypeSelected = (e) => {
-    setExportType(e.value)
-  }
-
-  const exportFieldSelected = (e) => {
-    setExportField(e.value)
   }
 
   const retrieveBooks = () => {
@@ -142,13 +128,13 @@ const BookList = (props) => {
         Cell: (props) => {
           const rowIdx = props.row.id
           return (
-            <div class="btn-toolbar" role="toolbar">
-              <div class="btn-group me-2" role="group">
+            <div className="btn-toolbar" role="toolbar">
+              <div className="btn-group me-2" role="group">
                 <span onClick={() => bookDetail(rowIdx)}>
                   <i className="far fa-edit action mr-2"></i>
                 </span>
               </div>
-              <div class="btn-group me-2" role="group">
+              <div className="btn-group me-2" role="group">
                 <span onClick={() => deleteBook(rowIdx)}>
                   <i className="fas fa-trash action"></i>
                 </span>
@@ -180,17 +166,6 @@ const BookList = (props) => {
     useSortBy,
     usePagination
   )
-
-  const exportTypeChoice = [
-    { value: 'CSV', label: 'CSV' },
-    { value: 'XML', label: 'XML' }
-  ]
-
-  const exportColumnChoice = [
-    { value: '', label: 'All' },
-    { value: 'title', label: 'Title' },
-    { value: 'author', label: 'Author' }
-  ]
 
   return (
     <div className="list row">
@@ -248,7 +223,7 @@ const BookList = (props) => {
             })}
           </tbody>
         </table>
-        <div class="flexbox text-end">
+        <div className="flexbox text-end">
           <span>
             Page{' '}
             <strong>{pageIndex + 1} of {pageOptions.length}</strong>
@@ -256,14 +231,6 @@ const BookList = (props) => {
           <button className="btn btn-sm btn-primary" onClick={() => previousPage()} disabled={!canPreviousPage}>◀</button>
           <button className="btn btn-sm btn-secondary" onClick={() => nextPage()} disabled={!canNextPage}>▶</button>
         </div>
-      </div>
-
-      <div className="col-md-8">
-        <Select options={exportTypeChoice} onChange={exportTypeSelected}/>
-        <Select options={exportColumnChoice} onChange={exportFieldSelected}/>
-        <button className="btn btn-sm btn-success" onClick={generateExport}>
-          Export CSV
-        </button>
       </div>
     </div>
   )

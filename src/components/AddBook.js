@@ -47,9 +47,11 @@ const AddBook = () => {
       {submitted ? (
         <div>
           <h4>You submitted successfully!</h4>
-          <button className="btn btn-success" onClick={newBook}>
-            Add
-          </button>
+          <div className="text-end">
+            <button className="btn btn-success" onClick={newBook}>
+              Add New
+            </button>
+          </div>
         </div>
       ) : (
         <div>
@@ -80,11 +82,13 @@ const AddBook = () => {
             />
           </div>
 
-          <button
-            onClick={saveBook}
-            className="btn btn-success">
-            Submit
-          </button>
+          <div className="text-end">
+            <button
+              onClick={saveBook}
+              className="btn btn-success">
+              Submit
+            </button>
+          </div>
         </div>
       )}
     </div>

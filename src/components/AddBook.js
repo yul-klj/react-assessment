@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import BookDataService from "../services/BookService"
 import { useHistory } from "react-router-dom";
+import Alert from 'react-bootstrap/Alert'
 
 const AddBook = props => {
   const initialBookState = {
@@ -10,17 +11,26 @@ const AddBook = props => {
   }
   const [book, setBook] = useState(initialBookState)
   const [submitted, setSubmitted] = useState(false)
+  const [message, setMessage] = useState("");
 
   const handleInputChange = event => {
     const { name, value } = event.target
     setBook({ ...book, [name]: value })
   }
 
-  const saveBook = () => {
+  const saveBook = (e) => {
+    e.preventDefault()
     var data = {
       title: book.title,
       author: book.author
     }
+    setMessage(null);
+
+    if (! data.title || ! data.author) {
+      setMessage('Kindly fill up all the fields.');
+      return false;
+    }
+
     if (window.confirm('Are you sure you wish to add this book?')) {
       BookDataService.create(data)
         .then(response => {
@@ -30,7 +40,6 @@ const AddBook = props => {
             author: response.data.content.data.author
           })
           setSubmitted(true)
-          console.log(response.data)
         })
         .catch(e => {
           console.log(e)
@@ -66,6 +75,11 @@ const AddBook = props => {
       ) : (
         <div>
           <h3>Add Book Detail</h3>
+          {message ?
+            <Alert variant="warning" closeLabel="x" onClose={() => setMessage(null)} dismissible>
+              {message}
+            </Alert>
+          : ''}
           <div className="input-group mb-3 w-50">
             <span className="input-group-text" htmlFor="title">Title<span className="red">*</span></span>
             <input

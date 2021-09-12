@@ -32,7 +32,15 @@ const BookDetail = props => {
     setCurrentBook({ ...currentBook, [name]: value });
   };
 
-  const updateBook = () => {
+  const updateBook = (e) => {
+    e.preventDefault()
+    setMessage(null);
+
+    if (! currentBook.title || ! currentBook.author) {
+      setMessage('Kindly fill up all the fields.');
+      return false;
+    }
+
     if (window.confirm('Are you sure you wish to update this book?')) {
       BookDataService.update(currentBook.id, currentBook)
         .then(response => {
@@ -49,7 +57,7 @@ const BookDetail = props => {
     if (window.confirm('Are you sure you wish to delete this book?')) {
       BookDataService.remove(currentBook.id)
         .then(response => {
-          props.history.push("/books");
+          history.goBack()
         })
         .catch(e => {
           console.log(e);
@@ -66,7 +74,7 @@ const BookDetail = props => {
         <div className="edit-form">
           <h4>Book Detail</h4>
           {message ?
-            <Alert variant="success" closeLabel="x" onClose={() => setMessage(null)} dismissible>
+            <Alert variant="warning" closeLabel="x" onClose={() => setMessage(null)} dismissible>
               {message}
             </Alert>
           : ''}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BookDataService from "../services/BookService";
 import Alert from 'react-bootstrap/Alert'
+import { useHistory } from "react-router-dom";
 
 const BookDetail = props => {
   const initialBookState = {
@@ -57,9 +58,7 @@ const BookDetail = props => {
     }
   };
 
-  const backBookListing = () => {
-    props.history.push("/books");
-  };
+  const history = useHistory();
 
   return (
     <div>
@@ -99,7 +98,7 @@ const BookDetail = props => {
           <div className="d-grid gap-2 d-md-flex justify-content-md-end w-50 text-end">
             <button
               className="btn btn-sm btn-primary me-md-2"
-              onClick={backBookListing}
+              onClick={() => history.goBack()}
               >
               Back to Listing
             </button>

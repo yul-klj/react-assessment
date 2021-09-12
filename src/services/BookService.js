@@ -1,7 +1,7 @@
 import http from "../http-common";
 
 const getAll = () => {
-  return http.get("/books?all=1");
+  return http.get("/books");
 };
 
 const get = (id) => {
@@ -20,8 +20,14 @@ const remove = (id) => {
   return http.delete(`/book/${id}`);
 };
 
-const search = (keyword) => {
-  return http.get(`/books/search?all=1&keyword=${keyword}`);
+const search = (token, keyword) => {
+  if (token)
+    return http.get(`/books/search?cursor=${token}`)
+
+  if (keyword)
+    return http.get(`/books/search?keyword=${keyword}`);
+
+  return http.get(`/books/search`)
 };
 
 const BookService = {

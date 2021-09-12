@@ -3,16 +3,19 @@ import BookDataService from "../services/BookService"
 import { useTable, useSortBy, usePagination } from "react-table"
 import Alert from 'react-bootstrap/Alert'
 
-const BookList = (props) => {
+const BookListBackendPaginate = (props) => {
   const [books, setBooks] = useState([])
   const [searchKeyword, setSearchKeyword] = useState("")
   const bookRef = useRef()
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
+
+  const [nextPageToken, setNextPageToken] = useState("")
+  const [previousPageToken, setPreviousPageToken] = useState("")
 
   bookRef.current = books
 
   useEffect(() => {
-    retrieveBooks()
+    retrieveBooks(null, null)
   }, [])
 
   const onChangeSearchKeyword = (e) => {
@@ -20,20 +23,23 @@ const BookList = (props) => {
     setSearchKeyword(searchKeyword)
   }
 
-  const retrieveBooks = () => {
-    BookDataService.getAll()
-      .then((response) => {
-        setBooks(response.data.content.data)
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-  }
+  const retrieveBooks = (pageToken, searchKeyword) => {
+    if (! pageToken) {
+      setNextPageToken(null)
+      setPreviousPageToken(null)
+    }
 
-  const findByKeyword = () => {
-    BookDataService.search(searchKeyword)
+    BookDataService.search(pageToken, searchKeyword)
       .then((response) => {
-        setBooks(response.data.content.data)
+        setNextPageToken(null)
+        setPreviousPageToken(null)
+        if (response.data.content.data.next_page_url)
+          setNextPageToken(response.data.content.data.next_page_url.toString().split('=')[1])
+
+        if (response.data.content.data.prev_page_url)
+          setPreviousPageToken(response.data.content.data.prev_page_url.toString().split('=')[1])
+
+        setBooks(response.data.content.data.data)
       })
       .catch((e) => {
         console.log(e)
@@ -52,7 +58,7 @@ const BookList = (props) => {
     if (window.confirm('Are you sure you wish to delete this book?')) {
       BookDataService.remove(id)
         .then((response) => {
-          props.history.push("/books")
+          props.history.push("/books-be-paginate")
 
           let newBook = [...bookRef.current]
           newBook.splice(rowIndex, 1)
@@ -106,11 +112,6 @@ const BookList = (props) => {
     getTableBodyProps,
     headerGroups,
     page,
-    nextPage,
-    previousPage,
-    canNextPage,
-    canPreviousPage,
-    pageOptions,
     state: {pageIndex},
     prepareRow,
   } = useTable({
@@ -128,6 +129,7 @@ const BookList = (props) => {
           {message}
         </Alert>
       : ''}
+      <p className="red">Expect pagination from backend, and sorting is on current view table sort only</p>
       <div className="col-md-12">
         <div className="input-group mb-3">
           <input
@@ -141,7 +143,7 @@ const BookList = (props) => {
             <button
               className="btn btn-outline-secondary"
               type="button"
-              onClick={findByKeyword}
+              onClick={() => retrieveBooks(null, searchKeyword)}
             >
               Search
             </button>
@@ -183,16 +185,12 @@ const BookList = (props) => {
           </tbody>
         </table>
         <div className="flexbox text-end">
-          <span>
-            Page{' '}
-            <strong>{pageIndex + 1} of {pageOptions.length}</strong>
-          </span>{' '}
-          <button className="btn btn-sm btn-primary" onClick={() => previousPage()} disabled={!canPreviousPage}>◀</button>
-          <button className="btn btn-sm btn-secondary" onClick={() => nextPage()} disabled={!canNextPage}>▶</button>
+          <button className="btn btn-sm btn-primary" onClick={() => retrieveBooks(previousPageToken, searchKeyword)} disabled={!previousPageToken}>◀</button>
+          <button className="btn btn-sm btn-secondary" onClick={() => retrieveBooks(nextPageToken, searchKeyword)} disabled={!nextPageToken}>▶</button>
         </div>
       </div>
     </div>
   )
 }
 
-export default BookList
+export default BookListBackendPaginate

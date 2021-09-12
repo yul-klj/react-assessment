@@ -7,20 +7,26 @@ import "./App.css";
 
 import AddBook from "./components/AddBook";
 import BookDetail from "./components/BookDetail";
-import BookList from "./components/BookList";
+import BookListBackendPaginate from "./components/BookListBackendPaginate";
+import BookListFrontendPaginate from "./components/BookListFrontendPaginate";
 import Export from "./components/Export";
 
 function App() {
   return (
     <div>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <a href="/books" className="navbar-brand">
+        <a href="#" className="navbar-brand">
           Books Management
         </a>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
-            <Link to={"/books"} className="nav-link">
-              Listing
+            <Link to={"/books-be-paginate"} className="nav-link">
+              Listing (Backend Paginate)
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to={"/books-fe-paginate"} className="nav-link">
+              Listing (Frontend Paginate)
             </Link>
           </li>
           <li className="nav-item">
@@ -38,7 +44,8 @@ function App() {
 
       <div className="container mt-3">
         <Switch>
-          <Route exact path={["/", "/books"]} component={BookList}/>
+          <Route exact path="/books-be-paginate" component={BookListBackendPaginate}/>
+          <Route exact path="/books-fe-paginate" component={BookListFrontendPaginate}/>
           <Route exact path="/add" component={AddBook} />
           <Route path="/book/:id" component={BookDetail}/>
           <Route path="/export" component={Export}/>

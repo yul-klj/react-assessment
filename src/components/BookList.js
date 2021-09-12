@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from "react"
 import BookDataService from "../services/BookService"
 import { useTable, useSortBy, usePagination } from "react-table"
+import Alert from 'react-bootstrap/Alert'
 
 const BookList = (props) => {
   const [books, setBooks] = useState([])
   const [searchKeyword, setSearchKeyword] = useState("")
   const bookRef = useRef()
+  const [message, setMessage] = useState("");
 
   bookRef.current = books
 
@@ -56,6 +58,7 @@ const BookList = (props) => {
           newBook.splice(rowIndex, 1)
 
           setBooks(newBook)
+          setMessage('Book deleted successfully')
         })
         .catch((e) => {
           console.log(e)
@@ -120,6 +123,11 @@ const BookList = (props) => {
 
   return (
     <div className="list row">
+      {message ?
+        <Alert variant="success" closeLabel="x" onClose={() => setMessage(null)} dismissible>
+          {message}
+        </Alert>
+      : ''}
       <div className="col-md-12">
         <div className="input-group mb-3">
           <input

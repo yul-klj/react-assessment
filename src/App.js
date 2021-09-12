@@ -8,6 +8,7 @@ import "./App.css";
 import AddBook from "./components/AddBook";
 import BookDetail from "./components/BookDetail";
 import BookList from "./components/BookList";
+import Export from "./components/Export";
 
 function App() {
   return (
@@ -24,7 +25,12 @@ function App() {
           </li>
           <li className="nav-item">
             <Link to={"/add"} className="nav-link">
-              Add
+              Add New
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to={"/export"} className="nav-link">
+              Export
             </Link>
           </li>
         </div>
@@ -35,6 +41,7 @@ function App() {
           <Route exact path={["/", "/books"]} component={BookList}/>
           <Route exact path="/add" component={AddBook} />
           <Route path="/book/:id" component={BookDetail}/>
+          <Route path="/export" component={Export}/>
         </Switch>
       </div>
     </div>

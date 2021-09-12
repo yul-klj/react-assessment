@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import BookDataService from "../services/BookService";
+import Alert from 'react-bootstrap/Alert'
 
 const BookDetail = props => {
   const initialBookState = {
@@ -65,16 +66,14 @@ const BookDetail = props => {
       {currentBook ? (
         <div className="edit-form">
           <h4>Book Detail</h4>
-          <div
-            style={message ? {} : { display: 'none' }}
-            className="alert alert-primary"
-            role="alert"
-          >
-            <p>{message}</p>
-          </div>
+          {message ?
+            <Alert variant="success" closeLabel="x" onClose={() => setMessage(null)} dismissible>
+              {message}
+            </Alert>
+          : ''}
           <form>
-            <div className="form-group">
-              <label htmlFor="title">Title</label>
+            <div className="input-group mb-3 w-50">
+              <span className="input-group-text" htmlFor="title">Title<span className="red">*</span></span>
               <input
                 type="text"
                 className="form-control"
@@ -84,8 +83,8 @@ const BookDetail = props => {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="author">Author</label>
+            <div className="input-group mb-3 w-50">
+              <span className="input-group-text" htmlFor="author">Author<span className="red">*</span></span>
               <input
                 type="text"
                 className="form-control"
@@ -97,12 +96,12 @@ const BookDetail = props => {
             </div>
           </form>
 
-          <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+          <div className="d-grid gap-2 d-md-flex justify-content-md-end w-50 text-end">
             <button
               className="btn btn-sm btn-primary me-md-2"
               onClick={backBookListing}
               >
-              Back
+              Back to Listing
             </button>
             <button
               className="btn btn-sm btn-danger me-md-2"

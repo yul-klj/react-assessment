@@ -1,12 +1,12 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import ExportService from "../services/ExportService"
 import Select from 'react-select'
+import Alert from 'react-bootstrap/Alert'
 
-const Export = () => {
-  const [exportType, setExportType] = useState("")
+const Export = (props) => {
+  const [exportType, setExportType] = useState("CSV")
   const [exportField, setExportField] = useState("")
-  const [exportedId, setExportedId] = useState("")
-  const [exportedUrl, setExportedUrl] = useState("")
+  const [showAlert, setShowAlert] = useState(false);
 
   const exportTypeChoice = [
     { value: 'CSV', label: 'CSV' },
@@ -28,15 +28,17 @@ const Export = () => {
   }
 
   const generateExport = () => {
+    setShowAlert(true)
     ExportService.generate(exportType, exportField)
-      .then((response) => {
-        setExportedId(response.data.content.data.id)
-        console.log('initialized')
+      .then(async (response) => {
+        const resData = await response
+        if (resData.status == 200) {
+          return Promise.resolve(resData.data.content.data.id);
+        }
       })
-      .then(() => {
-        console.log('retrieving')
+      .then(async (exportedId) => {
         const timer = setTimeout(() => {
-          retrieveExport()
+          retrieveExport(exportedId)
         }, 5000)
       })
       .catch((e) => {
@@ -44,47 +46,53 @@ const Export = () => {
       })
   }
 
-  const retrieveExport = () => {
-    console.log('called')
-    console.log(exportedId);
-
+  const retrieveExport = (exportedId) => {
     ExportService.retrieve(exportedId)
-      .then((response) => {
-        if (response.data.content.data.location) {
-          console.log(response.data.content.data.location)
-          setExportedUrl(response.data.content.data.location)
-          setExportedId(null)
+      .then(async (response) => {
+        const resData = await response
+        if (resData.data.content.data.location) {
           const link = document.createElement('a');
-          link.href = exportedUrl;
+          link.href = resData.data.content.data.location;
+          link.setAttribute('target', '_blank')
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
+          setShowAlert(false)
         }
       })
       .catch((e) => {
         console.log(e)
       })
-
-
-    // if (exportedUrl) {
-    //   console.log('window open')
-    //   window.open(exportedUrl, '_blank')
-    //   return () => clearTimeout(timer)
-    // }
-
   }
 
   return (
     <div>
+      {showAlert ?
+        <Alert variant="success">
+          Exporting, Kindly wait for the file to loaded on new tab
+        </Alert>
+      : ''}
       <h3>Export Feature</h3>
       <div className="input-group mb-3 w-50">
         <span htmlFor="type" className="input-group-text">Type</span>
-        <Select className="form-control" id="type" options={exportTypeChoice} onChange={exportTypeSelected}/>
+        <Select
+          className="form-control"
+          id="type"
+          options={exportTypeChoice}
+          onChange={exportTypeSelected}
+          defaultValue={{ value: 'CSV', label: 'CSV' }}
+        />
       </div>
 
       <div className="input-group mb-3 w-50">
         <span htmlFor="field" className="input-group-text">Field</span>
-        <Select className="form-control" id="field" options={exportColumnChoice} onChange={exportFieldSelected}/>
+        <Select
+          className="form-control"
+          id="field"
+          options={exportColumnChoice}
+          onChange={exportFieldSelected}
+          defaultValue={{ value: '', label: 'All' }}
+        />
       </div>
 
       <div className="w-50 text-end" role="group">

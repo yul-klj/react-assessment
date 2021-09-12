@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import BookDataService from "../services/BookService"
+import { useHistory } from "react-router-dom";
 
 const AddBook = props => {
   const initialBookState = {
@@ -43,8 +44,10 @@ const AddBook = props => {
   }
 
   const backBookListing = () => {
-    props.history.push("/books");
+    history.goBack()
   };
+
+  const history = useHistory();
 
   return (
     <div className="submit-form">

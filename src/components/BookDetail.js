@@ -17,6 +17,7 @@ const BookDetail = props => {
       })
       .catch(e => {
         console.log(e);
+        setCurrentBook(null)
       });
   };
 
@@ -37,6 +38,7 @@ const BookDetail = props => {
         })
         .catch(e => {
           console.log(e);
+          setCurrentBook(null)
         });
     }
   };
@@ -45,11 +47,11 @@ const BookDetail = props => {
     if (window.confirm('Are you sure you wish to delete this book?')) {
       BookDataService.remove(currentBook.id)
         .then(response => {
-          console.log(response.data);
           props.history.push("/books");
         })
         .catch(e => {
           console.log(e);
+          setCurrentBook(null)
         });
     }
   };
@@ -65,7 +67,7 @@ const BookDetail = props => {
           <h4>Book Detail</h4>
           <div
             style={message ? {} : { display: 'none' }}
-            class="alert alert-primary"
+            className="alert alert-primary"
             role="alert"
           >
             <p>{message}</p>
@@ -95,31 +97,32 @@ const BookDetail = props => {
             </div>
           </form>
 
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             <button
               className="btn btn-sm btn-primary me-md-2"
-              onClick={backBookListing}>
+              onClick={backBookListing}
+              >
               Back
             </button>
             <button
               className="btn btn-sm btn-danger me-md-2"
-              onClick={deleteBook}>
+              onClick={deleteBook}
+              >
               Delete
             </button>
             <button
               type="submit"
               className="btn btn-sm btn-success"
               onClick={updateBook}
-            >
+              >
               Update
             </button>
           </div>
-          
         </div>
       ) : (
         <div>
           <br />
-          <p>Please click on a Book...</p>
+          <p>Book does not exist, please click a Book on listing...</p>
         </div>
       )}
     </div>

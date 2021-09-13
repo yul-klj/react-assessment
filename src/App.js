@@ -16,17 +16,17 @@ function App() {
     <div>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <a href="#" className="navbar-brand">
-          Books Management
+          Book Management
         </a>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
-            <Link to={"/books-be-paginate"} className="nav-link">
-              Listing (Backend Paginate)
+            <Link to={"/books-fe-paginate"} className="nav-link">
+              Listing (Frontend Paginate)
             </Link>
           </li>
           <li className="nav-item">
-            <Link to={"/books-fe-paginate"} className="nav-link">
-              Listing (Frontend Paginate)
+            <Link to={"/books-be-paginate"} className="nav-link">
+              Listing (Backend Paginate)
             </Link>
           </li>
           <li className="nav-item">
@@ -44,8 +44,8 @@ function App() {
 
       <div className="container mt-3">
         <Switch>
+          <Route exact path={["/", "/books-fe-paginate"]} component={BookListFrontendPaginate}/>
           <Route exact path="/books-be-paginate" component={BookListBackendPaginate}/>
-          <Route exact path="/books-fe-paginate" component={BookListFrontendPaginate}/>
           <Route exact path="/add" component={AddBook} />
           <Route path="/book/:id" component={BookDetail}/>
           <Route path="/export" component={Export}/>

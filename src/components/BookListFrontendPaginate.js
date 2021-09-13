@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react"
 import BookDataService from "../services/BookService"
-import { useTable, useSortBy, usePagination } from "react-table"
+import { useTable, useSortBy, usePagination, useGlobalFilter } from "react-table"
 import Alert from 'react-bootstrap/Alert'
 
 const BookListFrontendPaginate = (props) => {
@@ -106,13 +106,18 @@ const BookListFrontendPaginate = (props) => {
     pageOptions,
     state: {pageIndex},
     prepareRow,
+    state,
+    setGlobalFilter
   } = useTable({
       columns,
       data: books
     },
+    useGlobalFilter,
     useSortBy,
     usePagination
   )
+
+  const { globalFilter } = state
 
   return (
     <div className="list row">
@@ -128,18 +133,9 @@ const BookListFrontendPaginate = (props) => {
             type="text"
             className="form-control"
             placeholder="Search by keyword"
-            value={searchKeyword}
-            onChange={onChangeSearchKeyword}
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(e.target.value || undefined)}
           />
-          <div className="input-group-append">
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
-              onClick={() => retrieveBooks(null, searchKeyword)}
-            >
-              Search
-            </button>
-          </div>
         </div>
       </div>
       <div className="col-md-12 list">

@@ -30,7 +30,7 @@ const AddBook = props => {
     setMessage(null)
     if (! data.title || ! data.author) {
       setMessage('Kindly fill up all the fields.')
-      return;
+      return
     }
 
     if (window.confirm('Are you sure you wish to add this book?')) {

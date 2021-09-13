@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import BookDataService from "../services/BookService"
-import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom"
 import Alert from 'react-bootstrap/Alert'
+import StructureLaravelValidationError from "./StructureLaravelValidationError"
 
 const AddBook = props => {
   const initialBookState = {
@@ -11,7 +12,8 @@ const AddBook = props => {
   }
   const [book, setBook] = useState(initialBookState)
   const [submitted, setSubmitted] = useState(false)
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
+  const [validationResError, setValidationResError] = useState("")
 
   const handleInputChange = event => {
     const { name, value } = event.target
@@ -19,16 +21,16 @@ const AddBook = props => {
   }
 
   const saveBook = (e) => {
-    e.preventDefault()
+    // e.preventDefault()
     var data = {
       title: book.title,
       author: book.author
     }
-    setMessage(null);
 
+    setMessage(null)
     if (! data.title || ! data.author) {
-      setMessage('Kindly fill up all the fields.');
-      return false;
+      setMessage('Kindly fill up all the fields.')
+      return;
     }
 
     if (window.confirm('Are you sure you wish to add this book?')) {
@@ -41,8 +43,8 @@ const AddBook = props => {
           })
           setSubmitted(true)
         })
-        .catch(e => {
-          console.log(e)
+        .catch(error => {
+          setValidationResError(error.response.data.content.error)
         })
     }
   }
@@ -52,19 +54,13 @@ const AddBook = props => {
     setSubmitted(false)
   }
 
-  const backBookListing = () => {
-    history.goBack()
-  };
-
-  const history = useHistory();
-
   return (
     <div className="submit-form">
       {submitted ? (
         <div className="row g-3 w-50">
           <h4>You submitted successfully!</h4>
           <div className="col-sm-10 text-end">
-            <button className="btn btn-primary me-md-2" onClick={backBookListing}>
+            <button className="btn btn-primary me-md-2" onClick={() => props.history.push("/books-fe-paginate")}>
               Back to Listing
             </button>
             <button className="btn btn-success" onClick={newBook}>
@@ -78,6 +74,12 @@ const AddBook = props => {
           {message ?
             <Alert variant="warning" closeLabel="x" onClose={() => setMessage(null)} dismissible>
               {message}
+            </Alert>
+          : ''}
+          {validationResError ?
+            <Alert variant="warning" closeLabel="x" onClose={() => setValidationResError("")} dismissible>
+              <Alert.Heading>Validation Error</Alert.Heading>
+              <StructureLaravelValidationError errorData={validationResError}></StructureLaravelValidationError>
             </Alert>
           : ''}
           <div className="input-group mb-3 w-50">
@@ -95,7 +97,6 @@ const AddBook = props => {
 
           <div className="input-group mb-3 w-50">
             <span className="input-group-text" htmlFor="author">Author<span className="red">*</span></span>
-
             <input
               type="text"
               className="form-control"

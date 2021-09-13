@@ -39,30 +39,34 @@ const Export = (props) => {
       .then(async (exportedId) => {
         const timer = setTimeout(() => {
           retrieveExport(exportedId)
-        }, 5000)
+        }, 1000)
       })
       .catch((e) => {
         console.log(e)
       })
   }
 
+  const downloadByUrl = (url) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('target', '_blank')
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setShowAlert(false)
+  }
+
   const retrieveExport = (exportedId) => {
     ExportService.retrieve(exportedId)
-      .then(async (response) => {
-        const resData = await response
-        if (resData.data.content.data.location) {
-          const link = document.createElement('a');
-          link.href = resData.data.content.data.location;
-          link.setAttribute('target', '_blank')
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          setShowAlert(false)
-        }
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+    .then(async (response) => {
+      const resData = await response
+      if (resData.data.content.data.location) {
+        downloadByUrl(resData.data.content.data.location)
+      }
+    })
+    .catch((e) => {
+      console.log(e)
+    })
   }
 
   return (

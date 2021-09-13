@@ -6,7 +6,7 @@ import Alert from 'react-bootstrap/Alert'
 const Export = (props) => {
   const [exportType, setExportType] = useState("CSV")
   const [exportField, setExportField] = useState("")
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState(false)
 
   const exportTypeChoice = [
     { value: 'CSV', label: 'CSV' },
@@ -33,7 +33,7 @@ const Export = (props) => {
       .then(async (response) => {
         const resData = await response
         if (resData.status == 200) {
-          return Promise.resolve(resData.data.content.data.id);
+          return Promise.resolve(resData.data.content.data.id)
         }
       })
       .then(async (exportedId) => {
@@ -47,12 +47,12 @@ const Export = (props) => {
   }
 
   const downloadByUrl = (url) => {
-    const link = document.createElement('a');
-    link.href = url;
+    const link = document.createElement('a')
+    link.href = url
     link.setAttribute('target', '_blank')
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
     setShowAlert(false)
   }
 

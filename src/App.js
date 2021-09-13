@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import { Switch, Route, Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "@fortawesome/fontawesome-free/css/all.css";
-import "@fortawesome/fontawesome-free/js/all.js";
-import "./App.css";
+import React, { Component } from "react"
+import { Switch, Route, Link } from "react-router-dom"
+import "bootstrap/dist/css/bootstrap.min.css"
+import "@fortawesome/fontawesome-free/css/all.css"
+import "@fortawesome/fontawesome-free/js/all.js"
+import "./App.css"
 
-import AddBook from "./components/AddBook";
-import BookDetail from "./components/BookDetail";
-import BookListBackendPaginate from "./components/BookListBackendPaginate";
-import BookListFrontendPaginate from "./components/BookListFrontendPaginate";
-import Export from "./components/Export";
+import AddBook from "./components/AddBook"
+import BookDetail from "./components/BookDetail"
+import BookListBackendPaginate from "./components/BookListBackendPaginate"
+import BookListFrontendPaginate from "./components/BookListFrontendPaginate"
+import Export from "./components/Export"
 
 function App() {
   return (
@@ -52,7 +52,7 @@ function App() {
         </Switch>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
